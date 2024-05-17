@@ -8,36 +8,45 @@ app.use(express.json());
 
 const DATABASE = loadData();
 
-app.post("/auth/register", (req, res) => {
-  DATABASE[randomUUID()] = req.body;
-  saveData(DATABASE);
+app.get("/find/all", (req, res) => {
+    return res.send(DATABASE);
+});
 
-  res.sendStatus(200);
+app.post("/auth/register", (req, res) => {
+    for (let i of Object.keys(DATABASE)) {
+        if (DATABASE[i].login === req.body.login) {
+          return res.status(403).send("user already exist")
+        }
+    }
+    DATABASE[randomUUID()] = req.body;
+    saveData(DATABASE);
+
+    return res.sendStatus(200);
 });
 
 app.post("/auth/login", (req, res) => {
-  for (let i of Object.keys(DATABASE)) {
-    if (DATABASE[i].login === req.body.login) {
-      if (DATABASE[i].password === req.body.password) {
-        res.sendStatus(200);
-      } else {
-        res.sendStatus(404);
-      }
+    for (let i of Object.keys(DATABASE)) {
+        if (DATABASE[i].login === req.body.login) {
+            if (DATABASE[i].password === req.body.password) {
+                return res.sendStatus(200);
+            } else {
+                return res.sendStatus(404);
+            }
+        }
     }
-  }
-  res.sendStatus(404);
+    return res.sendStatus(404);
 });
 app.post("/auth/pass_forgot", (req, res) => {
-  for (i of Object.keys(DATABASE)) {
-    if (DATABASE[i].login === req.body.login) {
-      DATABASE[i].password === req.body.password;
-      saveData(DATABASE);
-      res.sendStatus(200);
+    for (i of Object.keys(DATABASE)) {
+        if (DATABASE[i].login === req.body.login) {
+            DATABASE[i].password === req.body.password;
+            saveData(DATABASE);
+            return res.sendStatus(200);
+        }
     }
-  }
-  res.sendStatus(404);
+    return res.sendStatus(404);
 });
 
 app.listen(PORT, () => {
-  console.log("Server inicializado na porta:", PORT);
+    console.log("Server inicializado na porta:", PORT);
 });
