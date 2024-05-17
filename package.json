@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm i && npm run start",
-    "start": "node --watch app.js"
+    "start": "node --watch index.js"
   },
   "keywords": [],
   "author": "",
