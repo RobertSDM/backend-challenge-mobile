@@ -5,6 +5,7 @@ import { loadData, saveData } from "./controler/database_methods.js";
 const PORT = process.env?.PORT ?? 4500;
 const app = express();
 app.use(express.json());
+app.use(express.static("public"))
 
 const DATABASE = loadData();
 
@@ -47,6 +48,6 @@ app.post("/auth/pass_forgot", (req, res) => {
     return res.sendStatus(404);
 });
 
-app.listen(PORT, () => {
-    console.log("Server inicializado na porta:", PORT);
-});
+// app.listen(PORT, () => {
+//     console.log("Server inicializado na porta:", PORT);
+// });
