@@ -48,6 +48,6 @@ app.post("/auth/pass_forgot", (req, res) => {
     return res.sendStatus(404);
 });
 
-// app.listen(PORT, () => {
-//     console.log("Server inicializado na porta:", PORT);
-// });
+app.listen(PORT, () => {
+    console.log("Server inicializado na porta:", PORT);
+});
