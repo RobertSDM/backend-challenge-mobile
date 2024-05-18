@@ -7,7 +7,7 @@
     "scripts": {
         "vercel-build": "npm install && echo hello ",
         "build": "npm i &&",
-        "start": "node ./app.js"
+        "start": "node --watch ./app.js"
     },
     "keywords": [],
     "author": "",

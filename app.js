@@ -1,11 +1,12 @@
 import express from "express";
 import {
-    authenticate,
     changePass,
     findAll,
+    isAuthenticated,
     login,
     register,
 } from "./controler/index.js";
+
 const PORT = process.env?.PORT ?? 2121;
 export const app = express();
 app.use(express.json());
@@ -18,18 +19,18 @@ app.get("/find/all", async (req, res) => {
 app.post("/auth/register", async (req, res) => {
     const created = await register(req.body);
     if (created) {
-        return res.status(200);
+        return res.sendStatus(200);
     } else {
-        return res.status(400);
+        return res.sendStatus(400);
     }
 });
 app.post("/auth/login", async (req, res) => {
-    const logged = await login(req.body.login, req.body.password);
+    const logged = await login(req.body.login, req.body.senha);
 
     if (logged) {
-        return res.status(200);
+        return res.sendStatus(200);
     } else {
-        return res.status(400);
+        return res.sendStatus(400);
     }
 });
 
@@ -37,14 +38,22 @@ app.post("/auth/pass_forgot", (req, res) => {
     const changed = changePass(req.body.login, req.body.password);
 
     if (changed) {
-        return res.status(200);
+        return res.sendStatus(200);
     } else {
-        return res.status(400);
+        return res.sendStatus(400);
     }
 });
 
-app.get("/auth/is-authenticated", (req, res) => {
-    return authenticate(req.body);
+app.get("/auth/is-authenticated", async (req, res) => {
+    const isAuth = await isAuthenticated(req.body);
+
+    if (isAuth === null) {
+        return res.sendStatus(404);
+    } else if (!isAuth) {
+        return res.sendStatus(400);
+    } else {
+        return res.sendStatus(200);
+    }
 });
 
 app.listen(PORT, () => {

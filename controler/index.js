@@ -10,7 +10,7 @@ const findAll = async () => {
         return res;
     } catch (err) {
         console.log(err);
-        return []
+        return [];
     }
 };
 
@@ -18,10 +18,15 @@ const findByLogin = async (login) => {
     try {
         const res = await prisma.user.findFirst({
             where: {
-                login,
+                login: login,
             },
         });
-        return res;
+
+        if (res) {
+            return res;
+        } else {
+            return false;
+        }
     } catch (err) {
         console.log(err);
         return false;
@@ -34,10 +39,14 @@ const register = async (user) => {
 
         if (!exists) {
             const res = await prisma.user.create({
-                data: { ...user },
+                data: {
+                    login: user.login,
+                    senha: user.senha,
+                    apelido: user.apelido,
+                },
             });
 
-            authenticate(user);
+            await authenticate(user);
             return true;
         } else {
             return false;
@@ -51,11 +60,12 @@ const register = async (user) => {
 const login = async (login, pass) => {
     try {
         const user = await findByLogin(login);
+
         if (!user || user.senha !== pass) {
             return false;
         }
 
-        authenticate(user);
+        await authenticate(user);
         return true;
     } catch (err) {
         console.log(err);
@@ -85,7 +95,13 @@ const changePass = async (login, newPass) => {
     }
 };
 
-const isAuthenticated = (user) => {
+const isAuthenticated = async (user) => {
+    const usr = await findByLogin(user.login);
+
+    if (!usr) {
+        return null;
+    }
+
     if (authenticated[user.login]) {
         return true;
     } else {
@@ -93,8 +109,10 @@ const isAuthenticated = (user) => {
     }
 };
 
-const authenticate = (user) => {
-    if (!isAuthenticated(user)) {
+const authenticate = async (user) => {
+    const isAuth = await isAuthenticated(user);
+
+    if (!isAuth) {
         authenticated[user.login] = user;
         return true;
     } else {
