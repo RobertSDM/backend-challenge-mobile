@@ -2,8 +2,13 @@ import express from "express";
 import { randomUUID } from "crypto";
 import { loadData, saveData } from "./controler/database_methods.js";
 
-const PORT = process.env?.PORT ?? 4500;
-const app = express();
+import { fileURLToPath } from "url";
+import path from "path";
+
+export const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const PORT = process.env?.PORT ?? 2121;
+export const app = express();
 app.use(express.json());
 
 const DATABASE = loadData();
@@ -51,4 +56,3 @@ app.listen(PORT, () => {
     console.log("Server inicializado na porta:", PORT);
 });
 
-export {app}

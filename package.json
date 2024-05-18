@@ -1,19 +1,19 @@
 {
-  "name": "backend_mobile",
-  "version": "1.0.0",
-  "description": "",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "vercel-build": "echo.",
-    "build": "npm i",
-    "start": "node app.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.19.2",
-    "vercel": "^34.2.0"
-  }
+    "name": "backend_mobile",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "main": "app.js",
+    "scripts": {
+        "vercel-build": "npm install && echo hello ",
+        "build": "npm i &&",
+        "start": "node ./app.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.19.2",
+        "vercel": "^34.2.0"
+    }
 }
