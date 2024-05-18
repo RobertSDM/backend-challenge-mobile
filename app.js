@@ -50,3 +50,5 @@ app.post("/auth/pass_forgot", (req, res) => {
 app.listen(PORT, () => {
     console.log("Server inicializado na porta:", PORT);
 });
+
+export {app}
