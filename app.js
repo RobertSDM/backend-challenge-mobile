@@ -11,7 +11,8 @@ export const app = express();
 app.use(express.json());
 
 app.get("/find/all", async (req, res) => {
-    return await findAll(req.body);
+    const users = await findAll(req.body);
+    return res.send(users);
 });
 
 app.post("/auth/register", async (req, res) => {
