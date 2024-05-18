@@ -1,58 +1,51 @@
 import express from "express";
-import { randomUUID } from "crypto";
-import { loadData, saveData } from "./controler/database_methods.js";
-
-import { fileURLToPath } from "url";
-import path from "path";
-
-export const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
+import {
+    authenticate,
+    changePass,
+    findAll,
+    login,
+    register,
+} from "./controler";
 const PORT = process.env?.PORT ?? 2121;
 export const app = express();
 app.use(express.json());
 
-const DATABASE = loadData();
-
-app.get("/find/all", (req, res) => {
-    return res.send(DATABASE);
+app.get("/find/all", async (req, res) => {
+    return await findAll(req.body);
 });
 
-app.post("/auth/register", (req, res) => {
-    for (let i of Object.keys(DATABASE)) {
-        if (DATABASE[i].login === req.body.login) {
-          return res.status(403).send("user already exist")
-        }
+app.post("/auth/register", async (req, res) => {
+    const created = await register(req.body);
+    if (created) {
+        return res.status(200);
+    } else {
+        return res.status(400);
     }
-    DATABASE[randomUUID()] = req.body;
-    saveData(DATABASE);
-
-    return res.sendStatus(200);
 });
+app.post("/auth/login", async (req, res) => {
+    const logged = await login(req.body.login, req.body.password);
 
-app.post("/auth/login", (req, res) => {
-    for (let i of Object.keys(DATABASE)) {
-        if (DATABASE[i].login === req.body.login) {
-            if (DATABASE[i].password === req.body.password) {
-                return res.sendStatus(200);
-            } else {
-                return res.sendStatus(404);
-            }
-        }
+    if (logged) {
+        return res.status(200);
+    } else {
+        return res.status(400);
     }
-    return res.sendStatus(404);
 });
+
 app.post("/auth/pass_forgot", (req, res) => {
-    for (i of Object.keys(DATABASE)) {
-        if (DATABASE[i].login === req.body.login) {
-            DATABASE[i].password === req.body.password;
-            saveData(DATABASE);
-            return res.sendStatus(200);
-        }
+    const changed = changePass(req.body.login, req.body.password);
+
+    if (changed) {
+        return res.status(200);
+    } else {
+        return res.status(400);
     }
-    return res.sendStatus(404);
+});
+
+app.get("/auth/is-authenticated", (req, res) => {
+    return authenticate(req.body);
 });
 
 app.listen(PORT, () => {
     console.log("Server inicializado na porta:", PORT);
 });
-
