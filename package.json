@@ -6,12 +6,13 @@
   "main": "index.js",
   "scripts": {
     "build": "npm i && npm run start",
-    "start": "node --watch index.js"
+    "start": "node --watch app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "vercel": "^34.2.0"
   }
 }
