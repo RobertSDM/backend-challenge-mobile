@@ -5,7 +5,7 @@ import {
     findAll,
     login,
     register,
-} from "./controler";
+} from "./controler/index.js";
 const PORT = process.env?.PORT ?? 2121;
 export const app = express();
 app.use(express.json());
