@@ -34,8 +34,8 @@ app.post("/auth/login", async (req, res) => {
     }
 });
 
-app.post("/auth/pass_forgot", (req, res) => {
-    const changed = changePass(req.body.login, req.body.password);
+app.post("/auth/pass_forgot", async (req, res) => {
+    const changed = await changePass(req.body.login, req.body.senha);
 
     if (changed) {
         return res.sendStatus(200);

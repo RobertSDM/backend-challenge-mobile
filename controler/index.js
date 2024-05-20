@@ -75,6 +75,7 @@ const login = async (login, pass) => {
 const changePass = async (login, newPass) => {
     try {
         const user = await findByLogin(login);
+        
         if (!user || user.senha !== pass) {
             return false;
         }
