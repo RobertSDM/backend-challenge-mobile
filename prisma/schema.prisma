@@ -8,16 +8,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// datasource db {
-//   provider = "mysql"
-//   url      = env("DATABASE_URL")
-// }
-
-// Teste database
-datasource test {
-  provider = "sqlite"
+datasource db {
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+// Teste database
+// datasource test {
+//   provider = "sqlite"
+//   url      = env("DATABASE_URL")
+// }
 
 model Empresa {
   id              String           @id @default(cuid())
