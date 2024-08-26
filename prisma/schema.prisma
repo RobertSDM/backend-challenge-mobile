@@ -8,14 +8,45 @@ generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
+// datasource db {
+//   provider = "mysql"
+//   url      = env("DATABASE_URL")
+// }
+
+// Teste database
+datasource test {
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id      String @id @default(uuid())
-  login   String @unique
+model Empresa {
+  id              String           @id @default(cuid())
+  usuario_id      String           @unique
+  usuario         Usuario          @relation(fields: [usuario_id], references: [id])
+  analise_mercado Analise_mercado?
+}
+
+model Usuario {
+  id      String   @id @default(cuid())
+  email   String   @unique
   senha   String
-  apelido String @unique
+  nome    String
+  empresa Empresa?
+}
+
+model Analise_mercado {
+  id                    Int       @id @default(autoincrement())
+  empresa_id            String    @unique
+  media_navegacao       Int
+  taxa_redirecionamento Int
+  // Relations
+  empresa               Empresa   @relation(fields: [empresa_id], references: [id])
+  cliques               Cliques[]
+}
+
+model Cliques {
+  id                 Int             @id @default(autoincrement())
+  cliques            Int
+  analise_mercado_id Int             @unique
+  analise_mercado    Analise_mercado @relation(fields: [analise_mercado_id], references: [id])
 }
