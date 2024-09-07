@@ -4,8 +4,8 @@ import {
     login,
     register,
     findByEmail,
-    removeAcccount,
 } from "./repository/index.js";
+import { usuarioService } from "./service/usuarioService.js";
 
 const PORT = process.env?.PORT ?? 2121;
 
@@ -56,7 +56,7 @@ app.put("/auth/pass_forgot", async (req, res) => {
 });
 
 app.delete("/account/remove/:email", async (req, res) => {
-    const deleted = await removeAcccount(req.params.email);
+    const deleted = await usuarioService(req.params.email);
 
     if (deleted) {
         return res.sendStatus(200);

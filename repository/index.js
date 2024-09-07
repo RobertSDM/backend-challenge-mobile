@@ -5,6 +5,35 @@ import gerarDadosQuandoRegistrar from "../utils/gerarDadosQuandoRegistrar.js";
 
 let prisma = new PrismaClient();
 
+const findAllTreeUsuarioEmail = async (email) => {
+    try {
+        const usuario = prisma.usuario.findFirst({
+            where: {
+                email: email,
+            },
+            include: {
+                empresa: {
+                    include: {
+                        analise_mercado: {
+                            include: {
+                                cliques: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        if (usuario) {
+            return usuario;
+        }
+        return false;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+};
+
 const findByEmail = async (email) => {
     try {
         const res = await prisma.usuario.findFirst({
@@ -82,30 +111,41 @@ const register = async (email, senha, nome) => {
     }
 };
 
-const removeAcccount = async (email) => {
+const removeAcccount = async (usuario) => {
     try {
-        const res = await prisma.usuario.delete({
+        await prisma.cliques.deleteMany({
             where: {
-                email: email,
-            },
-            include: {
-                empresa: {
-                    include: {
-                        analise_mercado: {
-                            include: {
-                                cliques: true,
-                            },
-                        },
-                    },
-                },
+                analise_mercado_id: usuario.empresa.analise_mercado.id,
             },
         });
 
-        if (res) {
-            return true;
-        } else {
-            return false;
-        }
+        console.log("Delete cliques");
+
+        await prisma.analise_mercado.delete({
+            where: {
+                id: usuario.empresa.analise_mercado.id,
+            },
+        });
+
+        console.log("Delete analise_mercado");
+
+        await prisma.empresa.delete({
+            where: {
+                id: usuario.empresa.id,
+            },
+        });
+
+        console.log("Delete empresa");
+
+        await prisma.usuario.delete({
+            where: {
+                id: usuario.id,
+            },
+        });
+
+        console.log("Delete usuario");
+
+        return true;
     } catch (err) {
         console.log(err);
         return false;
@@ -176,4 +216,11 @@ const changePass = async (email, newPass) => {
 //     }
 // };
 
-export { register, login, changePass, findByEmail, removeAcccount };
+export {
+    register,
+    login,
+    changePass,
+    findByEmail,
+    removeAcccount,
+    findAllTreeUsuarioEmail,
+};
