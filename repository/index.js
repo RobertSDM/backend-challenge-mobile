@@ -82,6 +82,25 @@ const register = async (email, senha, nome) => {
     }
 };
 
+const removeAcccount = async (email) => {
+    try {
+        const res = await prisma.usuario.delete({
+            where: {
+                email: email,
+            },
+        });
+
+        if (res) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+};
+
 const login = async (email, pass) => {
     try {
         const usuario = await findByEmail(email);
@@ -146,4 +165,4 @@ const changePass = async (email, newPass) => {
 //     }
 // };
 
-export { register, login, changePass, findByEmail };
+export { register, login, changePass, findByEmail, removeAcccount };

@@ -1,5 +1,11 @@
 import express from "express";
-import { changePass, login, register, findByEmail } from "./routes/index.js";
+import {
+    changePass,
+    login,
+    register,
+    findByEmail,
+    removeAcccount,
+} from "./repository/index.js";
 
 const PORT = process.env?.PORT ?? 2121;
 
@@ -43,6 +49,16 @@ app.put("/auth/pass_forgot", async (req, res) => {
     const changed = await changePass(req.body.email, req.body.novaSenha);
 
     if (changed) {
+        return res.sendStatus(200);
+    } else {
+        return res.sendStatus(400);
+    }
+});
+
+app.delete("/account/remove/:email", async (req, res) => {
+    const deleted = await removeAcccount(req.params.email);
+
+    if (deleted) {
         return res.sendStatus(200);
     } else {
         return res.sendStatus(400);
