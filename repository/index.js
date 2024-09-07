@@ -88,6 +88,17 @@ const removeAcccount = async (email) => {
             where: {
                 email: email,
             },
+            include: {
+                empresa: {
+                    include: {
+                        analise_mercado: {
+                            include: {
+                                cliques: true,
+                            },
+                        },
+                    },
+                },
+            },
         });
 
         if (res) {
